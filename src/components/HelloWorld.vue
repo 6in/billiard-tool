@@ -3,29 +3,47 @@
     <h1>{{ msg }}</h1>
     <flex-box>
       <flex-item>
-        <pool ref="pool"
+        <pool
+          ref="pool"
           :cb="cb"
           :ob="ob"
           :pk="pk"
           :r="r"
           @moveBall="onMoveBall"
           @degreeGB2CB="onDegreeGB2CB"
-          @selectPocket="onSelectPocket"></pool>
+          @selectPocket="onSelectPocket"
+        ></pool>
       </flex-item>
       <flex-item>
         <contact-point :degree="gb2cb" />
         <flex-box direction="column">
-          <flex-item><span>角度:</span><input :value="getDegree()" /><span>度</span></flex-item>
+          <flex-item>
+            <span>角度:</span>
+            <input :value="getDegree()" />
+            <span>度</span>
+          </flex-item>
         </flex-box>
       </flex-item>
       <flex-item>
         <thick-ball :degree="gb2cb" :tap-size="tapSize" @thickPercent="onThickPercent" />
         <flex-box direction="column">
-          <flex-item><span>厚み:</span><input :value="thick" placeholder="edit me"><span>%</span></flex-item>
-          <flex-item><span>タップ:</span><input v-model="tapSize" placeholder="edit me" /><span>mm</span></flex-item>
+          <flex-item>
+            <span>厚み:</span>
+            <input :value="thick" placeholder="edit me" />
+            <span>%</span>
+          </flex-item>
+          <flex-item>
+            <span>タップ:</span>
+            <span><input type="range" v-model="tapSize" min="12" max="20"/></span>
+            <span>{{ tapSize }}mm</span>
+          </flex-item>
         </flex-box>
       </flex-item>
-
+    </flex-box>
+    <flex-box>
+      <flex-item style="width: 100vw">
+        <gl-panel></gl-panel>
+      </flex-item>
     </flex-box>
   </div>
 </template>
@@ -36,6 +54,7 @@ import ContactPoint from './ContactPoint'
 import FlexBox from './FlexBox'
 import FlexItem from './FlexItem'
 import ThickBall from './ThickBall'
+import GlPanel from './GlPanel'
 
 export default {
   name: 'HelloWorld',
@@ -44,7 +63,8 @@ export default {
     FlexBox,
     FlexItem,
     Pool,
-    ThickBall
+    ThickBall,
+    GlPanel
   },
   props: {
     msg: String
@@ -70,7 +90,7 @@ export default {
     }
   },
   methods: {
-    onMoveBall ({target, cx, cy}) {
+    onMoveBall ({ target, cx, cy }) {
       // console.log({target,cx,cy});
       const vm = this
       vm[target].cx = cx
@@ -96,7 +116,7 @@ export default {
       }
       return deg
     },
-    onSelectPocket ({x, y}) {
+    onSelectPocket ({ x, y }) {
       this.pk.cx = x
       this.pk.cy = y
     }
