@@ -101,6 +101,7 @@ export default {
       // }
 
       vm.$emit('degreeGB2CB', Math.floor(deg3))
+      vm.$emit('setGB', {cx, cy})
 
       return {
         cx: cx,

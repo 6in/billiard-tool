@@ -12,6 +12,7 @@
           @moveBall="onMoveBall"
           @degreeGB2CB="onDegreeGB2CB"
           @selectPocket="onSelectPocket"
+          @setGB="onSetGB"
         ></pool>
       </flex-item>
       <flex-item>
@@ -42,7 +43,10 @@
     </flex-box>
     <flex-box>
       <flex-item style="width: 100vw">
-        <gl-panel></gl-panel>
+        <gl-panel :cb="cb"
+        :gb="gb"
+        :ob="ob"
+        :degree="gb2cb"></gl-panel>
       </flex-item>
     </flex-box>
   </div>
@@ -83,6 +87,10 @@ export default {
         cx: 200,
         cy: 500
       },
+      gb: {
+        cx: 200,
+        cy: 500
+      },
       r: 9,
       gb2cb: 0,
       thick: 0,
@@ -98,6 +106,7 @@ export default {
     },
     onDegreeGB2CB (deg) {
       const vm = this
+      // console.log({deg})
       vm.gb2cb = deg
     },
     onThickPercent (thick) {
@@ -119,6 +128,9 @@ export default {
     onSelectPocket ({ x, y }) {
       this.pk.cx = x
       this.pk.cy = y
+    },
+    onSetGB (gb) {
+      this.gb = gb
     }
   }
 }
