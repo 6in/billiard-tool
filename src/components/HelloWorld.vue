@@ -12,7 +12,12 @@
           <flex-item>
             <toggle-button :labels="{ checked: 'ズームON', unchecked: 'ズームOFF'}"
               v-model="zoom"
-              :width="200"/>
+              :width="100"/>
+          </flex-item>
+          <flex-item>
+            <toggle-button :labels="{ checked: 'GB表示', unchecked: 'GB非表示'}"
+              v-model="showGB"
+              :width="100"/>
           </flex-item>
         </flex-box>
       </flex-item>
@@ -42,6 +47,7 @@
                 :degree="gb2cb"
                 :lookAtOb="lookAtOb"
                 :is-zoom="zoom"
+                :showGB="showGB"
                 :phi="phi"></gl-panel>
               </flex-item>
               <flex-item>
@@ -117,6 +123,7 @@ export default {
       tapSize: '12',
       zoom: false,
       lookAtOb: false,
+      showGB: true,
       phi: '' + (Math.PI / 180 * 80)
     }
   },

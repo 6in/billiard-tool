@@ -37,7 +37,7 @@
             :position="cb3d"
             cast-shadow receive-shadow></vgl-mesh>
 
-          <vgl-mesh
+          <vgl-mesh v-if="showGB"
             geometry="sphere"
             material="cb"
             :position="gb3d"
@@ -63,6 +63,9 @@
           <vgl-geometry
             name="line_pk2ob"
             :position-attribute="pk2obline"></vgl-geometry>
+          <vgl-geometry
+            name="line_gb2ob"
+            :position-attribute="gb2obline"></vgl-geometry>
 
           <vgl-line-basic-material
                   name="line_g"
@@ -70,6 +73,7 @@
                   color="#ffffff" ></vgl-line-basic-material>
           <vgl-line geometry="line_g" material="line_g"></vgl-line>
           <vgl-line geometry="line_pk2ob" material="line_g"></vgl-line>
+          <vgl-line geometry="line_gb2ob" material="line_g"></vgl-line>
 
           <!-- ライトの設定 -->
           <vgl-ambient-light color="#888888"></vgl-ambient-light>
@@ -103,7 +107,7 @@ export default {
         vm.cb.cx, vm.cb.cy) + vm.radius * 20
 
       if (vm.isZoom) {
-        dist = vm.radius * 20
+        dist = vm.radius * 10
       }
       // console.log(`r=${dist},rad=${vm.toDegree(rad)},rad3=${vm.toDegree(rad3)}`)
 
@@ -149,6 +153,14 @@ export default {
       ].join(',')
       return ret
     },
+    gb2obline () {
+      const vm = this
+      const ret = [
+        this.gb.cx - 200, vm.radius, this.gb.cy - 400,
+        this.ob.cx - 200, vm.radius, this.ob.cy - 400
+      ].join(',')
+      return ret
+    },
     lookAt () {
       if (this.lookAtOb) {
         return this.ob3d
@@ -184,6 +196,9 @@ export default {
     phi: {
       type: String,
       'default': '0.1'
+    },
+    showGB: {
+      type: Boolean
     }
   },
   data () {
