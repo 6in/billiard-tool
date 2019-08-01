@@ -134,16 +134,18 @@ export default {
       return `${x} ${vm.radius} ${z}`
     },
     gb2cbline () {
+      const vm = this
       const ret = [
-        this.gb.cx - 200, 10, this.gb.cy - 400,
-        this.cb.cx - 200, 10, this.cb.cy - 400
+        this.gb.cx - 200, vm.radius, this.gb.cy - 400,
+        this.cb.cx - 200, vm.radius, this.cb.cy - 400
       ].join(',')
       return ret
     },
     pk2obline () {
+      const vm = this
       const ret = [
-        this.pk.cx - 200, 10, this.pk.cy - 400,
-        this.ob.cx - 200, 10, this.ob.cy - 400
+        this.pk.cx - 200, vm.radius, this.pk.cy - 400,
+        this.ob.cx - 200, vm.radius, this.ob.cy - 400
       ].join(',')
       return ret
     },
