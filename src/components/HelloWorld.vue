@@ -1,66 +1,64 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <flex-box>
+    <flex-box direction="column">
       <flex-item>
-        <pool
-          ref="pool"
-          :cb="cb"
-          :ob="ob"
-          :pk="pk"
-          :r="r"
-          @moveBall="onMoveBall"
-          @degreeGB2CB="onDegreeGB2CB"
-          @selectPocket="onSelectPocket"
-          @setGB="onSetGB"
-        ></pool>
-      </flex-item>
-      <flex-item>
-        <flex-box direction="column">
-          <flex-item style="width: 800px">
-            <gl-panel :cb="cb"
-            :gb="gb"
-            :ob="ob"
-            :degree="gb2cb"
-            :is-zoom="zoom"></gl-panel>
+        <flex-box>
+          <flex-item>
+            <label>タップ:{{ tapSize }}mm<input type="range" v-model="tapSize" min="12" max="20"/></label>
           </flex-item>
           <flex-item>
-            <flex-box>
-              <flex-item>
-                <contact-point :degree="gb2cb" />
+            ズーム:<input type="checkbox" v-model="zoom"/>
+          </flex-item>
+        </flex-box>
+      </flex-item>
+      <flex-item>
+        <flex-box>
+          <flex-item>
+            <pool
+              ref="pool"
+              :cb="cb"
+              :ob="ob"
+              :pk="pk"
+              :r="r"
+              @moveBall="onMoveBall"
+              @degreeGB2CB="onDegreeGB2CB"
+              @selectPocket="onSelectPocket"
+              @setGB="onSetGB"
+            ></pool>
+          </flex-item>
+          <flex-item>
+            <flex-box direction="column">
+              <flex-item style="width: 800px">
+                <!--  -->
+                <gl-panel :cb="cb"
+                :gb="gb"
+                :ob="ob"
+                :degree="gb2cb"
+                :is-zoom="zoom"></gl-panel>
               </flex-item>
-
               <flex-item>
-                <thick-ball :degree="gb2cb" :tap-size="tapSize" @thickPercent="onThickPercent" />
+                <flex-box>
+                  <flex-item>
+                    <!-- コンタクトポイント -->
+                    <contact-point :degree="gb2cb"
+                        :dispDegree="getDegree()" />
+                  </flex-item>
+
+                  <flex-item>
+                    <thick-ball
+                      :degree="gb2cb"
+                      :tap-size="tapSize"
+                      @thickPercent="onThickPercent" />
+                  </flex-item>
+                </flex-box>
               </flex-item>
             </flex-box>
           </flex-item>
         </flex-box>
-      </flex-item>
-      <flex-item>
-        <flex-box direction="column">
-          <flex-item>
-            <span>角度:</span>
-            <input :value="getDegree()" />
-            <span>度</span>
-          </flex-item>
-          <flex-item>
-            <span>厚み:</span>
-            <input :value="thick" placeholder="edit me" />
-            <span>%</span>
-          </flex-item>
-          <flex-item>
-            <span>タップ:</span>
-            <span><input type="range" v-model="tapSize" min="12" max="20"/></span>
-            <span>{{ tapSize }}mm</span>
-          </flex-item>
-          <flex-item>
-            <span>ズーム:</span>
-            <span><input type="checkbox" v-model="zoom"/></span>
-          </flex-item>
-        </flex-box>
+
       </flex-item>
     </flex-box>
+
   </div>
 </template>
 
@@ -174,12 +172,12 @@ pool {
 }
 
 input {
-  font-size: 30px;
+  font-size: 20px;
   width: 30%;
   text-align: right;
 }
 
 span {
-  font-size: 30px;
+  font-size: 20px;
 }
 </style>

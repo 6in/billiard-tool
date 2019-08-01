@@ -11,6 +11,7 @@
             <line id="ob_center" :x1="ob.cx" :y1="ob.cy - r" :x2="ob.cx" :y2="ob.cy + r"  stroke="black" stroke-width="1"></line>
 
             <circle :cx="cp.cx" :cy="cp.cy" :r="4" fill="black"/>
+            <text x="100" y="30" font-size="30" fill="#ffffff">角度: {{ dispDegree }} 度</text>
 
         </svg>
     </div>
@@ -31,6 +32,10 @@ export default {
     degree: {
       type: Number,
       'default': 0
+    },
+    dispDegree: {
+      type: Number,
+      'default': 0.0
     }
   },
   computed: {

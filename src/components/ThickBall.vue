@@ -17,6 +17,8 @@
 
             <rect :x="tap.x" :y="300" :width="tap.w" :height="100" fill="white" />
 
+            <text x="100" y="30" font-size="30" fill="#ffffff">厚み: {{ thickPercent }} %</text>
+
         </svg>
     </div>
 </template>
@@ -29,7 +31,8 @@ export default {
     return {
       r: 80,
       cx: 200,
-      cy: 200
+      cy: 200,
+      thickPercent: 0
     }
   },
   props: {
@@ -91,7 +94,9 @@ export default {
         rhs = vm.cx + vm.r
         lhs = ob.cx - vm.r
       }
-      vm.$emit('thickPercent', Math.floor(((rhs - lhs) / (vm.r * 2)) * 100))
+      const value = Math.floor(((rhs - lhs) / (vm.r * 2)) * 100)
+      vm.thickPercent = value
+      vm.$emit('thickPercent', value)
     }
 
   }
