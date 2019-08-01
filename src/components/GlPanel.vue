@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <vgl-renderer antialias style="height: 50vh;" :shadow-map-enabled="true" :disable-depth="false">
+    <vgl-renderer antialias style="height: 400px;" :shadow-map-enabled="true" :disable-depth="false">
         <vgl-scene>
             <!-- 利用できるオブジェクト -->
             <vgl-sphere-geometry
@@ -80,11 +80,11 @@
         <vgl-perspective-camera :orbit-position="cameraPos" :orbit-target="gb3d"></vgl-perspective-camera>
     </vgl-renderer>
 
-    <aside class="control-panel">
+    <!-- <aside class="control-panel">
       <label>camera-r<input type="range" v-model="cameraSpherical.radius" min=*0* max="2000" /></label>
       <label>camera-p<input type="range" v-model="cameraSpherical.phi" min=*0* max="3" step="0.001" /></label>
       <label>zoom<input type="checkbox" v-model="isZoom" /></label>
-    </aside>
+    </aside> -->
 
   </div>
 </template>
@@ -148,6 +148,9 @@ export default {
     },
     degree: {
       type: Number
+    },
+    isZoom: {
+      type: Boolean
     }
   },
   data () {
@@ -163,8 +166,7 @@ export default {
         radius: 800,
         phi: Math.PI / 180 * 80,
         theta: 1.0
-      },
-      isZoom: false
+      }
     }
   },
   methods: {
