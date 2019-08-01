@@ -2,7 +2,7 @@
   <div class="hello">
     <flex-box direction="column">
       <flex-item>
-        <flex-box align-items="center">
+        <flex-box align-items="center" :style="{ height: '40px' }">
           <flex-item>
             タップ:{{ tapSize }}mm<input type="range" v-model="tapSize" min="12" max="20" style="width: 100px"/>
           </flex-item>
@@ -47,17 +47,19 @@
               <flex-item>
                 <flex-box>
                   <flex-item>
-                    <!-- コンタクトポイント -->
-                    <contact-point :degree="gb2cb"
-                        :dispDegree="getDegree()" />
-                  </flex-item>
-
-                  <flex-item>
+                    <!-- 厚み表示 -->
                     <thick-ball
                       :degree="gb2cb"
                       :tap-size="tapSize"
                       @thickPercent="onThickPercent" />
                   </flex-item>
+
+                  <flex-item>
+                    <!-- コンタクトポイント -->
+                    <contact-point :degree="gb2cb"
+                        :dispDegree="getDegree()" />
+                  </flex-item>
+
                 </flex-box>
               </flex-item>
             </flex-box>
