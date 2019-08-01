@@ -107,7 +107,7 @@ export default {
       }
       // console.log(`r=${dist},rad=${vm.toDegree(rad)},rad3=${vm.toDegree(rad3)}`)
 
-      return `${dist} ${vm.cameraSpherical.phi} ${rad3}`
+      return `${dist} ${vm.phi} ${rad3}`
     },
     ob3d () {
       const vm = this
@@ -178,6 +178,10 @@ export default {
     lookAtOb: {
       type: Boolean,
       'default': false
+    },
+    phi: {
+      type: String,
+      'default': '0.1'
     }
   },
   data () {

@@ -3,10 +3,13 @@
 import Vue from 'vue'
 import App from './App'
 import * as VueGL from 'vue-gl'
+import ToggleButton from 'vue-js-toggle-button'
 
 Object.keys(VueGL).forEach(name => {
   Vue.component(name, VueGL[name])
 })
+
+Vue.use(ToggleButton)
 
 Vue.config.productionTip = false
 

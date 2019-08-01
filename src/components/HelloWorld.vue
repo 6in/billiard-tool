@@ -4,10 +4,15 @@
       <flex-item>
         <flex-box align-items="center">
           <flex-item>
-            タップ:{{ tapSize }}mm<input type="range" v-model="tapSize" min="12" max="20"/>
+            タップ:{{ tapSize }}mm<input type="range" v-model="tapSize" min="12" max="20" style="width: 100px"/>
           </flex-item>
           <flex-item>
-            ズーム:<input type="checkbox" v-model="zoom"/>
+            見下ろし角度:<input type="range" v-model="phi" min="0.1" max="1.5" step="0.01" style="width: 100px"/>
+          </flex-item>
+          <flex-item>
+            <toggle-button :labels="{ checked: 'ズームON', unchecked: 'ズームOFF'}"
+              v-model="zoom"
+              :width="200"/>
           </flex-item>
         </flex-box>
       </flex-item>
@@ -29,14 +34,15 @@
           <flex-item>
             <flex-box direction="column">
               <flex-item style="width: 800px">
-                <!--  -->
+                <!-- 3D 表示 -->
                 <gl-panel :cb="cb"
                 :gb="gb"
                 :ob="ob"
                 :pk="pk"
                 :degree="gb2cb"
                 :lookAtOb="lookAtOb"
-                :is-zoom="zoom"></gl-panel>
+                :is-zoom="zoom"
+                :phi="phi"></gl-panel>
               </flex-item>
               <flex-item>
                 <flex-box>
@@ -108,7 +114,8 @@ export default {
       thick: 0,
       tapSize: '12',
       zoom: false,
-      lookAtOb: false
+      lookAtOb: false,
+      phi: '' + (Math.PI / 180 * 80)
     }
   },
   methods: {
