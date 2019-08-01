@@ -2,9 +2,9 @@
   <div class="hello">
     <flex-box direction="column">
       <flex-item>
-        <flex-box>
+        <flex-box align-items="center">
           <flex-item>
-            <label>タップ:{{ tapSize }}mm<input type="range" v-model="tapSize" min="12" max="20"/></label>
+            タップ:{{ tapSize }}mm<input type="range" v-model="tapSize" min="12" max="20"/>
           </flex-item>
           <flex-item>
             ズーム:<input type="checkbox" v-model="zoom"/>
@@ -33,7 +33,9 @@
                 <gl-panel :cb="cb"
                 :gb="gb"
                 :ob="ob"
+                :pk="pk"
                 :degree="gb2cb"
+                :lookAtOb="lookAtOb"
                 :is-zoom="zoom"></gl-panel>
               </flex-item>
               <flex-item>
@@ -105,7 +107,8 @@ export default {
       gb2cb: 0,
       thick: 0,
       tapSize: '12',
-      zoom: false
+      zoom: false,
+      lookAtOb: false
     }
   },
   methods: {

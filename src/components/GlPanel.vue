@@ -59,32 +59,29 @@
 
           <vgl-geometry
             name="line_g"
-            :position-attribute="gb2obline"></vgl-geometry>
-          <vgl-line-dashed-material
+            :position-attribute="gb2cbline"></vgl-geometry>
+          <vgl-geometry
+            name="line_pk2ob"
+            :position-attribute="pk2obline"></vgl-geometry>
+
+          <vgl-line-basic-material
                   name="line_g"
-                  :dash-size="1.0"
-                  :gap-size="1.0"
                   :linewidth="2.0"
-                  color="#ffffff" ></vgl-line-dashed-material>
+                  color="#ffffff" ></vgl-line-basic-material>
           <vgl-line geometry="line_g" material="line_g"></vgl-line>
+          <vgl-line geometry="line_pk2ob" material="line_g"></vgl-line>
 
           <!-- ライトの設定 -->
           <vgl-ambient-light color="#888888"></vgl-ambient-light>
           <vgl-directional-light position="100 100 100" cast-shadow></vgl-directional-light>
 
           <!-- 軸ヘルパー -->
-          <vgl-axes-helper size=1000></vgl-axes-helper>
+          <!-- <vgl-axes-helper size=1000></vgl-axes-helper> -->
         </vgl-scene>
 
         <!-- カメラの設定 -->
-        <vgl-perspective-camera :orbit-position="cameraPos" :orbit-target="gb3d"></vgl-perspective-camera>
+        <vgl-perspective-camera :orbit-position="cameraPos" :orbit-target="lookAt"></vgl-perspective-camera>
     </vgl-renderer>
-
-    <!-- <aside class="control-panel">
-      <label>camera-r<input type="range" v-model="cameraSpherical.radius" min=*0* max="2000" /></label>
-      <label>camera-p<input type="range" v-model="cameraSpherical.phi" min=*0* max="3" step="0.001" /></label>
-      <label>zoom<input type="checkbox" v-model="isZoom" /></label>
-    </aside> -->
 
   </div>
 </template>
@@ -108,33 +105,56 @@ export default {
       if (vm.isZoom) {
         dist = vm.radius * 20
       }
-      console.log(`r=${dist},rad=${vm.toDegree(rad)},rad3=${vm.toDegree(rad3)}`)
+      // console.log(`r=${dist},rad=${vm.toDegree(rad)},rad3=${vm.toDegree(rad3)}`)
 
       return `${dist} ${vm.cameraSpherical.phi} ${rad3}`
     },
     ob3d () {
+      const vm = this
       const x = this.ob.cx - 200
       const z = this.ob.cy - 400
-      return `${x} 10 ${z}`
+      return `${x} ${vm.radius} ${z}`
     },
     cb3d () {
+      const vm = this
       const x = this.cb.cx - 200
       const z = this.cb.cy - 400
-      return `${x} 10 ${z}`
+      return `${x} ${vm.radius} ${z}`
     },
     gb3d () {
+      const vm = this
       const x = this.gb.cx - 200
       const z = this.gb.cy - 400
-      return `${x} 10 ${z}`
+      return `${x} ${vm.radius} ${z}`
     },
-    gb2obline () {
+    pk3d () {
+      const vm = this
+      const x = this.pk.cx - 200
+      const z = this.pk.cy - 400
+      return `${x} ${vm.radius} ${z}`
+    },
+    gb2cbline () {
       const ret = [
         this.gb.cx - 200, 10, this.gb.cy - 400,
         this.cb.cx - 200, 10, this.cb.cy - 400
       ].join(',')
-      console.log(`gb2cb=${ret}`)
       return ret
+    },
+    pk2obline () {
+      const ret = [
+        this.pk.cx - 200, 10, this.pk.cy - 400,
+        this.ob.cx - 200, 10, this.ob.cy - 400
+      ].join(',')
+      return ret
+    },
+    lookAt () {
+      if (this.lookAtOb) {
+        return this.ob3d
+      } else {
+        return this.gb3d
+      }
     }
+
   },
   props: {
     ob: {
@@ -146,11 +166,18 @@ export default {
     cb: {
       type: Object
     },
+    pk: {
+      type: Object
+    },
     degree: {
       type: Number
     },
     isZoom: {
       type: Boolean
+    },
+    lookAtOb: {
+      type: Boolean,
+      'default': false
     }
   },
   data () {
