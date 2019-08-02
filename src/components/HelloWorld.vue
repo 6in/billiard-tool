@@ -19,11 +19,28 @@
               v-model="showGB"
               :width="100"/>
           </flex-item>
+          <flex-item>
+            <toggle-button :labels="{ checked: '的球中心', unchecked: 'GB中心'}"
+              v-model="lookAtOb"
+              :width="100"/>
+          </flex-item>
+          <flex-item>
+            <toggle-button :labels="{ checked: 'Train On', unchecked: 'Train Off'}"
+              v-model="trainBalls"
+              :width="100"/>
+          </flex-item>
+          <flex-item>
+            <toggle-button :labels="{ checked: 'Guide On', unchecked: 'Guide Off'}"
+              v-model="betweenLine"
+              :width="100"/>
+          </flex-item>
+
         </flex-box>
       </flex-item>
       <flex-item>
         <flex-box>
           <flex-item>
+            <!-- 2D 表示 -->
             <pool
               ref="pool"
               :cb="cb"
@@ -34,21 +51,25 @@
               @degreeGB2CB="onDegreeGB2CB"
               @selectPocket="onSelectPocket"
               @setGB="onSetGB"
-            ></pool>
+              @moveEnd="onMoveEnd"></pool>
           </flex-item>
           <flex-item>
             <flex-box direction="column">
               <flex-item style="width: 800px">
                 <!-- 3D 表示 -->
-                <gl-panel :cb="cb"
-                :gb="gb"
-                :ob="ob"
-                :pk="pk"
-                :degree="gb2cb"
-                :lookAtOb="lookAtOb"
-                :is-zoom="zoom"
-                :showGB="showGB"
-                :phi="phi"></gl-panel>
+                <gl-panel
+                  ref="gl_panel"
+                  :cb="cb"
+                  :gb="gb"
+                  :ob="ob"
+                  :pk="pk"
+                  :degree="gb2cb"
+                  :lookAtOb="lookAtOb"
+                  :is-zoom="zoom"
+                  :showGB="showGB"
+                  :phi="phi"
+                  :trainBalls="trainBalls"
+                  :betweenLine="betweenLine"></gl-panel>
               </flex-item>
               <flex-item>
                 <flex-box>
@@ -59,13 +80,11 @@
                       :tap-size="tapSize"
                       @thickPercent="onThickPercent" />
                   </flex-item>
-
                   <flex-item>
                     <!-- コンタクトポイント -->
                     <contact-point :degree="gb2cb"
                         :dispDegree="getDegree()" />
                   </flex-item>
-
                 </flex-box>
               </flex-item>
             </flex-box>
@@ -124,7 +143,9 @@ export default {
       zoom: false,
       lookAtOb: false,
       showGB: true,
-      phi: '' + (Math.PI / 180 * 80)
+      phi: '' + (Math.PI / 180 * 80),
+      trainBalls: false,
+      betweenLine: true
     }
   },
   methods: {
@@ -161,6 +182,16 @@ export default {
     },
     onSetGB (gb) {
       this.gb = gb
+    },
+    onClickUpdate () {
+      this.$refs.gl_panel.$forceUpdate()
+    },
+    onMoveEnd () {
+      const vm = this
+      vm.betweenLine = false
+      window.setTimeout(() => {
+        vm.betweenLine = true
+      }, 0)
     }
   }
 }

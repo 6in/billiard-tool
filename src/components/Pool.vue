@@ -238,6 +238,7 @@ export default {
     },
     mouseUp (e) {
       this.drag.obj = null
+      this.$emit('moveEnd')
     },
     mouseMove (e) {
       const vm = this
