@@ -176,7 +176,7 @@ export default {
         this.pk.cx - 200, vm.radius, this.pk.cy - 400,
         this.ob.cx - 200, vm.radius, this.ob.cy - 400
       ].join(',')
-      console.log(`pk2obline:${ret}`)
+      // console.log(`pk2obline:${ret}`)
       return ret
     },
     gb2obline () {
