@@ -70,8 +70,9 @@ export default {
     }
   },
   props: {
-    r: {
-      type: Number
+    radius: {
+      type: String,
+      default: '9.0'
     },
     pk: {
       type: Object
@@ -84,6 +85,9 @@ export default {
     }
   },
   computed: {
+    r () {
+      return Number(this.radius)
+    },
     gb () {
       const vm = this
       const rad = vm.getRadianOb(vm.ob, vm.pk) + Math.PI

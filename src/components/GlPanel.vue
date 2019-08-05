@@ -3,11 +3,6 @@
     <vgl-renderer antialias style="height: 400px;" :shadow-map-enabled="true" :disable-depth="false">
         <vgl-scene>
           <!-- 利用できるオブジェクト -->
-          <vgl-sphere-geometry
-              name="sphere"
-              :radius="radius"
-              :width-segments="widthSegments"
-              :height-segments="heightSegments"></vgl-sphere-geometry>
 
           <!-- 台 -->
           <vgl-box-geometry name="box" :width="400" :height="1" :depth="800"></vgl-box-geometry>
@@ -29,35 +24,43 @@
           <!-- 実際にオブジェクトを配置 -->
 
           <!-- 的球 -->
-          <vgl-mesh
-            geometry="sphere"
-            material="ob"
-            color="#ff0000"
-            :position="ob3d"
-            cast-shadow receive-shadow></vgl-mesh>
+          <vgl-group v-if="showBalls">
+            <vgl-sphere-geometry
+                name="sphere"
+                :radius="r"
+                :width-segments="widthSegments"
+                :height-segments="heightSegments"></vgl-sphere-geometry>
 
-          <!-- 手玉 -->
-          <vgl-mesh
-            geometry="sphere"
-            material="cb"
-            :position="cb3d"
-            cast-shadow receive-shadow></vgl-mesh>
-
-          <!-- GB -->
-          <vgl-mesh v-if="showGB"
-            geometry="sphere"
-            material="cb"
-            :position="gb3d"
-            cast-shadow receive-shadow></vgl-mesh>
-
-          <!-- トレイン表示 -->
-          <vgl-group v-if="trainBalls">
-            <vgl-mesh  v-for="(ball,i) in trainBalls3d"
-              v-bind:key="i"
+            <vgl-mesh
               geometry="sphere"
               material="ob"
-              :position="ball"
+              color="#ff0000"
+              :position="ob3d"
               cast-shadow receive-shadow></vgl-mesh>
+
+            <!-- 手玉 -->
+            <vgl-mesh
+              geometry="sphere"
+              material="cb"
+              :position="cb3d"
+              cast-shadow receive-shadow></vgl-mesh>
+
+            <!-- GB -->
+            <vgl-mesh v-if="showGB"
+              geometry="sphere"
+              material="cb"
+              :position="gb3d"
+              cast-shadow receive-shadow></vgl-mesh>
+
+            <!-- トレイン表示 -->
+            <vgl-group v-if="trainBalls">
+              <vgl-mesh  v-for="(ball,i) in trainBalls3d"
+                v-bind:key="i"
+                geometry="sphere"
+                material="ob"
+                :position="ball"
+                cast-shadow receive-shadow></vgl-mesh>
+            </vgl-group>
           </vgl-group>
 
           <!-- ガイドライン -->
@@ -109,25 +112,24 @@
 export default {
   name: 'gl-panel',
   computed: {
+    r () {
+      return Number(this.radius)
+    },
     cameraPos () {
       const vm = this
-
       let target = vm.gb
       if (vm.lookAtOb) {
         target = vm.ob
       }
-
       const rad = -vm.getRadian(
         target.cx, target.cy,
         vm.cb.cx, vm.cb.cy)
       const rad3 = Math.PI / 2.0 + rad
-
       let dist = vm.getDistance(
         target.cx, target.cy,
-        vm.cb.cx, vm.cb.cy) + vm.radius * 20
-
+        vm.cb.cx, vm.cb.cy) + vm.getR() * 20
       if (vm.isZoom) {
-        dist = vm.radius * 10
+        dist = vm.getR() * 10
       }
       return `${dist} ${vm.phi} ${rad3}`
     },
@@ -135,25 +137,25 @@ export default {
       const vm = this
       const x = this.ob.cx - 200
       const z = this.ob.cy - 400
-      return `${x} ${vm.radius} ${z}`
+      return `${x} ${vm.getR()} ${z}`
     },
     cb3d () {
       const vm = this
       const x = this.cb.cx - 200
       const z = this.cb.cy - 400
-      return `${x} ${vm.radius} ${z}`
+      return `${x} ${vm.getR()} ${z}`
     },
     gb3d () {
       const vm = this
       const x = this.gb.cx - 200
       const z = this.gb.cy - 400
-      return `${x} ${vm.radius} ${z}`
+      return `${x} ${vm.getR()} ${z}`
     },
     pk3d () {
       const vm = this
       const x = this.pk.cx - 200
       const z = this.pk.cy - 400
-      return `${x} ${vm.radius} ${z}`
+      return `${x} ${vm.getR()} ${z}`
     },
     gb2cbline () {
       const vm = this
@@ -164,8 +166,8 @@ export default {
       }
 
       const ret = [
-        tgt.cx - 200, vm.radius, tgt.cy - 400,
-        this.cb.cx - 200, vm.radius, this.cb.cy - 400
+        tgt.cx - 200, vm.getR(), tgt.cy - 400,
+        this.cb.cx - 200, vm.getR(), this.cb.cy - 400
       ].join(',')
       // console.log(`gb2cbline:${ret}`)
       return ret
@@ -173,8 +175,8 @@ export default {
     pk2obline () {
       const vm = this
       const ret = [
-        this.pk.cx - 200, vm.radius, this.pk.cy - 400,
-        this.ob.cx - 200, vm.radius, this.ob.cy - 400
+        this.pk.cx - 200, vm.getR(), this.pk.cy - 400,
+        this.ob.cx - 200, vm.getR(), this.ob.cy - 400
       ].join(',')
       // console.log(`pk2obline:${ret}`)
       return ret
@@ -182,8 +184,8 @@ export default {
     gb2obline () {
       const vm = this
       const ret = [
-        this.gb.cx - 200, vm.radius, this.gb.cy - 400,
-        this.ob.cx - 200, vm.radius, this.ob.cy - 400
+        this.gb.cx - 200, vm.getR(), this.gb.cy - 400,
+        this.ob.cx - 200, vm.getR(), this.ob.cy - 400
       ].join(',')
       return ret
     },
@@ -200,14 +202,14 @@ export default {
       // 的球からポケットまでの距離を計算
       const dist = vm.getDistance(vm.ob.cx, vm.ob.cy, vm.pk.cx, vm.pk.cy)
       // ボール何個分かを計算
-      const balls = Math.floor(dist / (vm.radius * 2.0)) + 1
+      const balls = Math.floor(dist / (vm.getR() * 2.0)) + 1
       // 的球からポケットまでの角度を計算
       const deg = Math.PI - vm.getRadian(vm.pk.cx, vm.pk.cy, vm.ob.cx, vm.ob.cy)
 
       // 的球を中心に、指定角度の方向へ、距離を伸ばしながらボールを配置する
       let targets = []
       for (let i = 0; i < balls; i++) {
-        const r = i * vm.radius * 2
+        const r = i * vm.getR() * 2
         targets.push({
           cx: vm.ob.cx + r * Math.cos(deg),
           cy: vm.ob.cy - r * Math.sin(deg)
@@ -215,11 +217,15 @@ export default {
         // console.log(targets[targets.length - 1])
       }
 
-      return targets.map(target => `${target.cx - 200} ${vm.radius} ${target.cy - 400}`)
+      return targets.map(target => `${target.cx - 200} ${vm.getR()} ${target.cy - 400}`)
     }
 
   },
   props: {
+    radius: {
+      type: String,
+      default: '9'
+    },
     ob: {
       type: Object
     },
@@ -261,23 +267,21 @@ export default {
   },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      x: -50,
-      y: 10,
-      z: -100,
-      radius: 9,
       widthSegments: 50,
       heightSegments: 50,
       cameraSpherical: {
         radius: 800,
         phi: Math.PI / 180 * 80,
         theta: 1.0
-      }
+      },
+      showBalls: true
     }
   },
   methods: {
+    getR () {
+      return Number(this.radius)
+    },
     getRadian (x1, y1, x2, y2) {
-      // console.log(`x1=${x1},y1=${y1},x2=${x2},y2=${y2}`)
       return Math.atan2(y2 - y1, x2 - x1)
     },
     toDegree (rad) {
@@ -285,6 +289,14 @@ export default {
     },
     getDistance (x, y, x2, y2) {
       return Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y))
+    },
+    refreshBalls () {
+      const vm = this
+      vm.showBalls = false
+      console.log(`r=${vm.getR()},${vm.getR()}`)
+      setTimeout(() => {
+        vm.showBalls = true
+      }, 10)
     }
   }
 }

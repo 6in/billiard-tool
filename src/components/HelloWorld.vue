@@ -2,7 +2,10 @@
   <div class="hello">
     <flex-box direction="column">
       <flex-item>
-        <flex-box align-items="center" :style="{ height: '40px' }">
+        <flex-box align-items="center"  wrap="wrap">
+          <flex-item>
+            ボールサイズ:<input type="range" v-model="r" min="8.0" max="12" step="0.1" style="width: 100px"/>
+          </flex-item>
           <flex-item>
             タップ:{{ tapSize }}mm<input type="range" v-model="tapSize" min="12" max="20" style="width: 100px"/>
           </flex-item>
@@ -34,11 +37,13 @@
               v-model="betweenLine"
               :width="100"/>
           </flex-item>
-
+          <flex-item>
+            <button @click='onClickRefresh'>リフレッシュ</button>
+          </flex-item>
         </flex-box>
       </flex-item>
       <flex-item>
-        <flex-box>
+        <flex-box v-if="!isSmartPhone" >
           <flex-item>
             <!-- 2D 表示 -->
             <pool
@@ -46,7 +51,7 @@
               :cb="cb"
               :ob="ob"
               :pk="pk"
-              :r="r"
+              :radius="r"
               @moveBall="onMoveBall"
               @degreeGB2CB="onDegreeGB2CB"
               @selectPocket="onSelectPocket"
@@ -59,6 +64,7 @@
                 <!-- 3D 表示 -->
                 <gl-panel
                   ref="gl_panel"
+                  :radius="r"
                   :cb="cb"
                   :gb="gb"
                   :ob="ob"
@@ -91,9 +97,62 @@
           </flex-item>
         </flex-box>
 
-      </flex-item>
-    </flex-box>
+        <flex-box v-if="isSmartPhone" direction="column">
+          <flex-item>
+            <flex-box>
+              <flex-item>
+                <!-- 2D 表示 -->
+                <pool
+                  ref="pool"
+                  :cb="cb"
+                  :ob="ob"
+                  :pk="pk"
+                  :radius="r"
+                  @moveBall="onMoveBall"
+                  @degreeGB2CB="onDegreeGB2CB"
+                  @selectPocket="onSelectPocket"
+                  @setGB="onSetGB"
+                  @moveEnd="onMoveEnd"></pool>
+              </flex-item>
+              <flex-item>
+                <flex-box direction="column">
+                  <flex-item>
+                    <!-- 厚み表示 -->
+                    <thick-ball
+                      :degree="gb2cb"
+                      :tap-size="tapSize"
+                      @thickPercent="onThickPercent" />
+                  </flex-item>
+                  <flex-item>
+                    <!-- コンタクトポイント -->
+                    <contact-point :degree="gb2cb"
+                        :dispDegree="getDegree()" />
+                  </flex-item>
+                </flex-box>
+              </flex-item>
+            </flex-box>
+          </flex-item>
 
+          <flex-item style="width: 800px">
+                <gl-panel
+                  ref="gl_panel"
+                  :radius="r"
+                  :cb="cb"
+                  :gb="gb"
+                  :ob="ob"
+                  :pk="pk"
+                  :degree="gb2cb"
+                  :lookAtOb="lookAtOb"
+                  :is-zoom="zoom"
+                  :showGB="showGB"
+                  :phi="phi"
+                  :trainBalls="trainBalls"
+                  :betweenLine="betweenLine"></gl-panel>
+          </flex-item>
+        </flex-box>
+      </flex-item>
+
+    </flex-box>
   </div>
 </template>
 
@@ -104,6 +163,7 @@ import FlexBox from './FlexBox'
 import FlexItem from './FlexItem'
 import ThickBall from './ThickBall'
 import GlPanel from './GlPanel'
+import isMobile from 'ismobilejs'
 
 export default {
   name: 'HelloWorld',
@@ -136,7 +196,8 @@ export default {
         cx: 200,
         cy: 500
       },
-      r: 9,
+      isSmartPhone: isMobile.phone,
+      r: '9',
       gb2cb: 0,
       thick: 0,
       tapSize: '12',
@@ -192,6 +253,9 @@ export default {
       window.setTimeout(() => {
         vm.betweenLine = true
       }, 0)
+    },
+    onClickRefresh () {
+      this.$refs.gl_panel.refreshBalls()
     }
   }
 }
