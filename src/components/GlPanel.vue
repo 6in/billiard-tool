@@ -11,11 +11,17 @@
           <vgl-box-geometry name="long_line"  :width="1" :height="1" :depth="800"></vgl-box-geometry>
           <vgl-box-geometry name="short_line" :width="400" :height="1" :depth="1"></vgl-box-geometry>
 
+          <!-- グリッド -->
+          <vgl-geometry
+              name="grid_line"
+              :position-attribute="`-100,1,-400,-100,1,400, 0,1,400, 0,1,-400, 100,1,-400, 200,1,-400, 200,1, -300, -200,1,300 `"></vgl-geometry>
+
           <!-- 色の種類 -->
           <vgl-mesh-standard-material name="ob" color="#ffff00"></vgl-mesh-standard-material>
           <vgl-mesh-standard-material name="cb" color="#ffffff"></vgl-mesh-standard-material>
           <vgl-mesh-lambert-material name="green" color="#009900"></vgl-mesh-lambert-material>
           <vgl-mesh-lambert-material name="gray" color="#000000"></vgl-mesh-lambert-material>
+          <vgl-mesh-lambert-material name="ltgray" color="#ffffff"></vgl-mesh-lambert-material>
           <vgl-line-basic-material
                   name="line_g"
                   :linewidth="2.0"
@@ -68,7 +74,18 @@
           <vgl-mesh geometry="long_line" material="cb" :position="`   0 0.1 0`" ></vgl-mesh>
           <vgl-mesh geometry="long_line" material="cb" :position="` 100 0.1 0`" ></vgl-mesh>
 
-          <vgl-mesh v-for="i in 7" :key="i" geometry="short_line" material="cb" :position="`   0 0.1 ${-300 + (i-1) * 100}`" ></vgl-mesh>
+          <vgl-group>
+            <vgl-group v-for="i in 7" :key="i">
+              <vgl-mesh
+                :key="i"
+                geometry="short_line"
+                material="cb"
+                :position="`   0 0.1 ${-300 + (i-1) * 100}`" >
+                </vgl-mesh>
+            </vgl-group>
+          </vgl-group>
+
+          <!-- <vgl-line-loop geometry="grid_line" material="ltgray"></vgl-line-loop> -->
 
           <!-- ビリヤード台 -->
           <vgl-mesh geometry="box" material="green" :position="`0 0 0`" receive-shadow ></vgl-mesh>
@@ -127,9 +144,9 @@ export default {
       const rad3 = Math.PI / 2.0 + rad
       let dist = vm.getDistance(
         target.cx, target.cy,
-        vm.cb.cx, vm.cb.cy) + vm.getR() * 20
+        vm.cb.cx, vm.cb.cy) + vm.r * 20
       if (vm.isZoom) {
-        dist = vm.getR() * 10
+        dist = vm.r * 10
       }
       return `${dist} ${vm.phi} ${rad3}`
     },
@@ -137,25 +154,25 @@ export default {
       const vm = this
       const x = this.ob.cx - 200
       const z = this.ob.cy - 400
-      return `${x} ${vm.getR()} ${z}`
+      return `${x} ${vm.r} ${z}`
     },
     cb3d () {
       const vm = this
       const x = this.cb.cx - 200
       const z = this.cb.cy - 400
-      return `${x} ${vm.getR()} ${z}`
+      return `${x} ${vm.r} ${z}`
     },
     gb3d () {
       const vm = this
       const x = this.gb.cx - 200
       const z = this.gb.cy - 400
-      return `${x} ${vm.getR()} ${z}`
+      return `${x} ${vm.r} ${z}`
     },
     pk3d () {
       const vm = this
       const x = this.pk.cx - 200
       const z = this.pk.cy - 400
-      return `${x} ${vm.getR()} ${z}`
+      return `${x} ${vm.r} ${z}`
     },
     gb2cbline () {
       const vm = this
@@ -166,8 +183,8 @@ export default {
       }
 
       const ret = [
-        tgt.cx - 200, vm.getR(), tgt.cy - 400,
-        this.cb.cx - 200, vm.getR(), this.cb.cy - 400
+        tgt.cx - 200, vm.r, tgt.cy - 400,
+        this.cb.cx - 200, vm.r, this.cb.cy - 400
       ].join(',')
       // console.log(`gb2cbline:${ret}`)
       return ret
@@ -175,8 +192,8 @@ export default {
     pk2obline () {
       const vm = this
       const ret = [
-        this.pk.cx - 200, vm.getR(), this.pk.cy - 400,
-        this.ob.cx - 200, vm.getR(), this.ob.cy - 400
+        this.pk.cx - 200, vm.r, this.pk.cy - 400,
+        this.ob.cx - 200, vm.r, this.ob.cy - 400
       ].join(',')
       // console.log(`pk2obline:${ret}`)
       return ret
@@ -184,8 +201,8 @@ export default {
     gb2obline () {
       const vm = this
       const ret = [
-        this.gb.cx - 200, vm.getR(), this.gb.cy - 400,
-        this.ob.cx - 200, vm.getR(), this.ob.cy - 400
+        this.gb.cx - 200, vm.r, this.gb.cy - 400,
+        this.ob.cx - 200, vm.r, this.ob.cy - 400
       ].join(',')
       return ret
     },
@@ -202,14 +219,14 @@ export default {
       // 的球からポケットまでの距離を計算
       const dist = vm.getDistance(vm.ob.cx, vm.ob.cy, vm.pk.cx, vm.pk.cy)
       // ボール何個分かを計算
-      const balls = Math.floor(dist / (vm.getR() * 2.0)) + 1
+      const balls = Math.floor(dist / (vm.r * 2.0)) + 1
       // 的球からポケットまでの角度を計算
       const deg = Math.PI - vm.getRadian(vm.pk.cx, vm.pk.cy, vm.ob.cx, vm.ob.cy)
 
       // 的球を中心に、指定角度の方向へ、距離を伸ばしながらボールを配置する
       let targets = []
       for (let i = 0; i < balls; i++) {
-        const r = i * vm.getR() * 2
+        const r = i * vm.r * 2
         targets.push({
           cx: vm.ob.cx + r * Math.cos(deg),
           cy: vm.ob.cy - r * Math.sin(deg)
@@ -217,7 +234,7 @@ export default {
         // console.log(targets[targets.length - 1])
       }
 
-      return targets.map(target => `${target.cx - 200} ${vm.getR()} ${target.cy - 400}`)
+      return targets.map(target => `${target.cx - 200} ${vm.r} ${target.cy - 400}`)
     }
 
   },
@@ -293,7 +310,7 @@ export default {
     refreshBalls () {
       const vm = this
       vm.showBalls = false
-      console.log(`r=${vm.getR()},${vm.getR()}`)
+      console.log(`r=${vm.r},${vm.r}`)
       setTimeout(() => {
         vm.showBalls = true
       }, 10)

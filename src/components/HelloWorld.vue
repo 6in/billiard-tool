@@ -213,6 +213,19 @@ export default {
     onMoveBall ({ target, cx, cy }) {
       // console.log({target,cx,cy});
       const vm = this
+      const r = Number(vm.r)
+      if (cx <= r) {
+        cx = r
+      }
+      if (400 - r <= cx) {
+        cx = 400 - r
+      }
+      if (cy <= r) {
+        cy = r
+      }
+      if (800 - r <= cy) {
+        cy = 800 - r
+      }
       vm[target].cx = cx
       vm[target].cy = cy
     },

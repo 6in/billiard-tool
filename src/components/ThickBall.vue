@@ -17,6 +17,44 @@
 
             <rect :x="tap.x" :y="300" :width="tap.w" :height="100" fill="white" />
 
+            <line
+              id="ob_lhs"
+              :x1="ob.cx - halfLine.x"
+              :y1="200 - halfLine.y"
+              :x2="ob.cx - halfLine.x "
+              :y2="200 + halfLine.y"
+              stroke="black"
+              stroke-width="1"
+              stroke-dasharray="2 2"></line>
+            <line
+              id="ob_lhs"
+              :x1="ob.cx + halfLine.x"
+              :y1="200 - halfLine.y"
+              :x2="ob.cx + halfLine.x "
+              :y2="200 + halfLine.y"
+              stroke="black"
+              stroke-width="1"
+              stroke-dasharray="2 2"></line>
+
+            <line
+              id="gb_lhs"
+              :x1="cx - halfLine.x"
+              :y1="cy - halfLine.y"
+              :x2="cx - halfLine.x "
+              :y2="cy + halfLine.y"
+              stroke="black"
+              stroke-width="1"
+              stroke-dasharray="2 2"></line>
+            <line
+              id="gb_rhs"
+              :x1="cx + halfLine.x"
+              :y1="cy - halfLine.y"
+              :x2="cx + halfLine.x "
+              :y2="cy + halfLine.y"
+              stroke="black"
+              stroke-width="1"
+              stroke-dasharray="2 2"></line>
+
             <text x="100" y="30" font-size="30" fill="#ffffff">厚み: {{ thickPercent }} %</text>
 
         </svg>
@@ -77,6 +115,14 @@ export default {
       const w = Number(vm.tapSize) * (vm.r * 2) / 57.0
 
       return { x: 200 - w / 2.0, w }
+    },
+    halfLine () {
+      const vm = this
+      const y = Math.sqrt(Math.abs(vm.r * vm.r - (vm.r / 2) * (vm.r / 2)))
+      return {
+        x: vm.r / 2.0,
+        y: y
+      }
     }
   },
   methods: {

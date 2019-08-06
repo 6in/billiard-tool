@@ -3,21 +3,53 @@
         <svg ref="svg" width=400 height=800>
 
             <g>
-                <line :x1="200" :y1="0" :x2="200" :y2="800" stroke="lightgray" stroke-width="1"></line>
-                <line :x1="200-block" :y1="0" :x2="200-block" :y2="800" stroke="lightgray" stroke-width="1"></line>
-                <line :x1="200+block" :y1="0" :x2="200+block" :y2="800" stroke="lightgray" stroke-width="1"></line>
+              <g>
+                <line v-for="i in 4"
+                  v-bind:key="i"
+                  :x1="-block / 2  + block * i"
+                  :y1="0"
+                  :x2="-block / 2  + block * i"
+                  :y2="800"
+                  stroke="lightgray"
+                  stroke-width="1"
+                  stroke-dasharray="2 2"></line>
+              </g>
 
-                <line :x1="0" :y1="400-block" :x2="400" :y2="400-block" stroke="lightgray" stroke-width="1"></line>
-                <line :x1="0" :y1="400-block*2" :x2="400" :y2="400-block*2" stroke="lightgray" stroke-width="1"></line>
-                <line :x1="0" :y1="400-block*3" :x2="400" :y2="400-block*3" stroke="lightgray" stroke-width="1"></line>
-                <line :x1="0" :y1="400" :x2="400" :y2="400" stroke="lightgray" stroke-width="1"></line>
-                <line :x1="0" :y1="400+block" :x2="400" :y2="400+block" stroke="lightgray" stroke-width="1"></line>
-                <line :x1="0" :y1="400+block*2" :x2="400" :y2="400+block*2" stroke="lightgray" stroke-width="1"></line>
-                <line :x1="0" :y1="400+block*3" :x2="400" :y2="400+block*3" stroke="lightgray" stroke-width="1"></line>
+              <g>
+                <line v-for="i in 8"
+                  v-bind:key="i"
+                  :x1="0"
+                  :y1="-block / 2  + block * i"
+                  :x2="400"
+                  :y2="-block / 2  + block * i"
+                  stroke="lightgray"
+                  stroke-width="1"
+                  stroke-dasharray="2 2"></line></g>
 
+              <g>
+                <line v-for="i in 3"
+                  v-bind:key="i"
+                  :x1="block * i"
+                  :y1="0"
+                  :x2="block * i"
+                  :y2="800"
+                  stroke="lightgray"
+                  stroke-width="1"></line></g>
+
+              <g>
+                <line v-for="i in 7"
+                  v-bind:key="i"
+                  :x1="0"
+                  :y1="block * i"
+                  :x2="400"
+                  :y2="block * i"
+                  stroke="lightgray"
+                  stroke-width="1"></line></g>
+
+              <g>
                 <circle v-for="(pocket,index) in pockets"
                   ref="pocket" v-bind:key="index" :cx="pocket.x" :cy="pocket.y"
-                  :r="r * 5" fill="rgba(0,0,255,0.3)"/>
+                  :r="r * 5" fill="rgba(0,0,255,0.3)"/></g>
 
             </g>
 
@@ -27,7 +59,7 @@
             <circle ref="ob2" id="ob" :cx="ob.cx" :cy="ob.cy" :r="r*4" fill="rgba(0,0,0,0)"/>
             <circle ref="ob" id="ob" :cx="ob.cx" :cy="ob.cy" :r="r" fill="yellow"/>
 
-            <circle ref="gb" id="gb" :cx="gb.cx" :cy="gb.cy" :r="r" fill="green" stroke="black"/>
+            <circle ref="gb" id="gb" :cx="gb.cx" :cy="gb.cy" :r="r" fill="gray" stroke="black"/>
 
             <line :x1="pk.cx" :y1="pk.cy" :x2="ob.cx" :y2="ob.cy" stroke="black" stroke-width="1"></line>
 
