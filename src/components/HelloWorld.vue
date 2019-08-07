@@ -23,8 +23,8 @@
               :width="100"/>
           </flex-item>
           <flex-item>
-            <toggle-button :labels="{ checked: '的球中心', unchecked: 'GB中心'}"
-              v-model="lookAtOb"
+            <toggle-button :labels="{ checked: 'GB中心', unchecked: '的球中心'}"
+              v-model="lookAtGb"
               :width="100"/>
           </flex-item>
           <flex-item>
@@ -36,9 +36,6 @@
             <toggle-button :labels="{ checked: 'Guide On', unchecked: 'Guide Off'}"
               v-model="betweenLine"
               :width="100"/>
-          </flex-item>
-          <flex-item>
-            <button @click='onClickRefresh'>リフレッシュ</button>
           </flex-item>
         </flex-box>
       </flex-item>
@@ -69,8 +66,8 @@
                   :gb="gb"
                   :ob="ob"
                   :pk="pk"
-                  :degree="gb2cb"
-                  :lookAtOb="lookAtOb"
+                  :degree="gb2cbDegree"
+                  :lookAtGb="lookAtGb"
                   :is-zoom="zoom"
                   :showGB="showGB"
                   :phi="phi"
@@ -82,13 +79,13 @@
                   <flex-item>
                     <!-- 厚み表示 -->
                     <thick-ball
-                      :degree="gb2cb"
+                      :degree="gb2cbDegree"
                       :tap-size="tapSize"
                       @thickPercent="onThickPercent" />
                   </flex-item>
                   <flex-item>
                     <!-- コンタクトポイント -->
-                    <contact-point :degree="gb2cb"
+                    <contact-point :degree="gb2cbDegree"
                         :dispDegree="getDegree()" />
                   </flex-item>
                 </flex-box>
@@ -119,13 +116,13 @@
                   <flex-item>
                     <!-- 厚み表示 -->
                     <thick-ball
-                      :degree="gb2cb"
+                      :degree="gb2cbDegree"
                       :tap-size="tapSize"
                       @thickPercent="onThickPercent" />
                   </flex-item>
                   <flex-item>
                     <!-- コンタクトポイント -->
-                    <contact-point :degree="gb2cb"
+                    <contact-point :degree="gb2cbDegree"
                         :dispDegree="getDegree()" />
                   </flex-item>
                 </flex-box>
@@ -141,8 +138,8 @@
                   :gb="gb"
                   :ob="ob"
                   :pk="pk"
-                  :degree="gb2cb"
-                  :lookAtOb="lookAtOb"
+                  :degree="gb2cbDegree"
+                  :lookAtGb="lookAtGb"
                   :is-zoom="zoom"
                   :showGB="showGB"
                   :phi="phi"
@@ -197,12 +194,12 @@ export default {
         cy: 500
       },
       isSmartPhone: isMobile.phone,
-      r: '9',
-      gb2cb: 0,
+      r: '8.0',
+      gb2cbDegree: 0,
       thick: 0,
       tapSize: '12',
       zoom: false,
-      lookAtOb: false,
+      lookAtGb: true,
       showGB: true,
       phi: '' + (Math.PI / 180 * 80),
       trainBalls: false,
@@ -232,7 +229,7 @@ export default {
     onDegreeGB2CB (deg) {
       const vm = this
       // console.log({deg})
-      vm.gb2cb = deg
+      vm.gb2cbDegree = deg
     },
     onThickPercent (thick) {
       this.thick = thick
@@ -240,10 +237,10 @@ export default {
     getDegree () {
       const vm = this
       let deg = 0
-      if (vm.gb2cb < -270) {
-        deg = 360 + vm.gb2cb
+      if (vm.gb2cbDegree < -270) {
+        deg = 360 + vm.gb2cbDegree
       } else {
-        deg = Math.abs(vm.gb2cb)
+        deg = Math.abs(vm.gb2cbDegree)
       }
       if (deg > 90) {
         deg = 360 - deg

@@ -60,12 +60,22 @@
 
             <!-- トレイン表示 -->
             <vgl-group v-if="trainBalls">
-              <vgl-mesh  v-for="(ball,i) in trainBalls3d"
-                v-bind:key="i"
-                geometry="sphere"
-                material="ob"
-                :position="ball"
-                cast-shadow receive-shadow></vgl-mesh>
+              <vgl-group>
+                <vgl-mesh  v-for="(ball,i) in trainBallsOb2Pk"
+                  v-bind:key="i"
+                  geometry="sphere"
+                  material="ob"
+                  :position="ball"
+                  cast-shadow receive-shadow></vgl-mesh>
+              </vgl-group>
+              <vgl-group>
+                <vgl-mesh  v-for="(ball,ii) in trainBallsCb2Gb"
+                  v-bind:key="ii"
+                  geometry="sphere"
+                  material="cb"
+                  :position="ball"
+                  cast-shadow receive-shadow></vgl-mesh>
+              </vgl-group>
             </vgl-group>
           </vgl-group>
 
@@ -135,7 +145,7 @@ export default {
     cameraPos () {
       const vm = this
       let target = vm.gb
-      if (vm.lookAtOb) {
+      if (!vm.lookAtGb) {
         target = vm.ob
       }
       const rad = -vm.getRadian(
@@ -178,7 +188,7 @@ export default {
       const vm = this
 
       let tgt = vm.gb
-      if (vm.lookAtOb) {
+      if (!vm.lookAtGb) {
         tgt = vm.ob
       }
 
@@ -207,13 +217,13 @@ export default {
       return ret
     },
     lookAt () {
-      if (this.lookAtOb) {
-        return this.ob3d
-      } else {
+      if (this.lookAtGb) {
         return this.gb3d
+      } else {
+        return this.ob3d
       }
     },
-    trainBalls3d () {
+    trainBallsOb2Pk () {
       const vm = this
 
       // 的球からポケットまでの距離を計算
@@ -233,10 +243,30 @@ export default {
         })
         // console.log(targets[targets.length - 1])
       }
+      return targets.map(target => `${target.cx - 200} ${vm.r} ${target.cy - 400}`)
+    },
+    trainBallsCb2Gb () {
+      const vm = this
 
+      // 手玉からGBまでの距離を計算
+      const dist = vm.getDistance(vm.cb.cx, vm.cb.cy, vm.gb.cx, vm.gb.cy)
+      // ボール何個分かを計算
+      const balls = Math.floor(dist / (vm.r * 2.0)) + 1
+      // 的球からポケットまでの角度を計算
+      const deg = Math.PI - vm.getRadian(vm.gb.cx, vm.gb.cy, vm.cb.cx, vm.cb.cy)
+
+      // 手玉を中心に、指定角度の方向へ、距離を伸ばしながらボールを配置する
+      let targets = []
+      for (let i = 0; i < balls; i++) {
+        const r = i * vm.r * 2
+        targets.push({
+          cx: vm.cb.cx + r * Math.cos(deg),
+          cy: vm.cb.cy - r * Math.sin(deg)
+        })
+        // console.log(targets[targets.length - 1])
+      }
       return targets.map(target => `${target.cx - 200} ${vm.r} ${target.cy - 400}`)
     }
-
   },
   props: {
     radius: {
@@ -261,7 +291,7 @@ export default {
     isZoom: {
       type: Boolean
     },
-    lookAtOb: {
+    lookAtGb: {
       type: Boolean,
       'default': false
     },

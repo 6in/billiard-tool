@@ -17,43 +17,44 @@
 
             <rect :x="tap.x" :y="300" :width="tap.w" :height="100" fill="white" />
 
-            <line
-              id="ob_lhs"
-              :x1="ob.cx - halfLine.x"
-              :y1="200 - halfLine.y"
-              :x2="ob.cx - halfLine.x "
-              :y2="200 + halfLine.y"
-              stroke="black"
-              stroke-width="1"
-              stroke-dasharray="2 2"></line>
-            <line
-              id="ob_lhs"
-              :x1="ob.cx + halfLine.x"
-              :y1="200 - halfLine.y"
-              :x2="ob.cx + halfLine.x "
-              :y2="200 + halfLine.y"
-              stroke="black"
-              stroke-width="1"
-              stroke-dasharray="2 2"></line>
-
-            <line
-              id="gb_lhs"
-              :x1="cx - halfLine.x"
-              :y1="cy - halfLine.y"
-              :x2="cx - halfLine.x "
-              :y2="cy + halfLine.y"
-              stroke="black"
-              stroke-width="1"
-              stroke-dasharray="2 2"></line>
-            <line
-              id="gb_rhs"
-              :x1="cx + halfLine.x"
-              :y1="cy - halfLine.y"
-              :x2="cx + halfLine.x "
-              :y2="cy + halfLine.y"
-              stroke="black"
-              stroke-width="1"
-              stroke-dasharray="2 2"></line>
+            <g v-for="(hl,ob_idx) in halfLine" :key="ob_idx">
+              <line
+                id="ob_lhs"
+                :x1="ob.cx - hl.x"
+                :y1="200 - hl.y"
+                :x2="ob.cx - hl.x "
+                :y2="200 + hl.y"
+                stroke="black"
+                stroke-width="1"
+                stroke-dasharray="2 2"></line>
+              <line
+                id="ob_lhs"
+                :x1="ob.cx + hl.x"
+                :y1="200 - hl.y"
+                :x2="ob.cx + hl.x "
+                :y2="200 + hl.y"
+                stroke="black"
+                stroke-width="1"
+                stroke-dasharray="2 2"></line>
+              <!-- <line
+                id="gb_lhs"
+                :x1="cx - hl.x"
+                :y1="cy - hl.y"
+                :x2="cx - hl.x "
+                :y2="cy + hl.y"
+                stroke="black"
+                stroke-width="1"
+                stroke-dasharray="2 2"></line>
+              <line
+                id="gb_rhs"
+                :x1="cx + hl.x"
+                :y1="cy - hl.y"
+                :x2="cx + hl.x "
+                :y2="cy + hl.y"
+                stroke="black"
+                stroke-width="1"
+                stroke-dasharray="2 2"></line> -->
+            </g>
 
             <text x="100" y="30" font-size="30" fill="#ffffff">厚み: {{ thickPercent }} %</text>
 
@@ -118,11 +119,26 @@ export default {
     },
     halfLine () {
       const vm = this
-      const y = Math.sqrt(Math.abs(vm.r * vm.r - (vm.r / 2) * (vm.r / 2)))
-      return {
-        x: vm.r / 2.0,
-        y: y
-      }
+      const r2 = vm.r / 2.0
+      const r4 = vm.r / 4.0
+      const y = Math.sqrt(Math.abs(vm.r * vm.r - r2 * r2))
+      const y2 = Math.sqrt(Math.abs(vm.r * vm.r - r4 * r4))
+      const y3 = Math.sqrt(Math.abs(vm.r * vm.r - (r4 + r2) * (r4 + r2)))
+
+      return [
+        {
+          x: vm.r / 2.0,
+          y: y
+        },
+        {
+          x: -r4,
+          y: y2
+        },
+        {
+          x: vm.r / 2.0 + r4,
+          y: y3
+        }
+      ]
     }
   },
   methods: {
@@ -144,7 +160,6 @@ export default {
       vm.thickPercent = value
       vm.$emit('thickPercent', value)
     }
-
   }
 }
 
