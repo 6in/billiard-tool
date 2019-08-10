@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div ref="gldiv" class="hello">
     <vgl-renderer antialias style="height: 400px;" :shadow-map-enabled="true" :disable-depth="false">
         <vgl-scene>
           <!-- 利用できるオブジェクト -->
@@ -339,6 +339,25 @@ export default {
       },
       showBalls: true
     }
+  },
+  mounted () {
+    const vm = this
+    const div = vm.$refs.gldiv
+    vm.dragging = false
+
+    div.addEventListener('mousedown', e => {
+      vm.dragging = true
+      // console.log('mouse down')
+    })
+    div.addEventListener('mousemove', e => {
+      if (vm.dragging === true) {
+        // console.log('mouse move')
+      }
+    })
+    div.addEventListener('mouseup', e => {
+      vm.dragging = false
+      // console.log('mouse up')
+    })
   },
   methods: {
     getR () {
