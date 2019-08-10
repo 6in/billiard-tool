@@ -7,6 +7,11 @@
           <!-- 台 -->
           <vgl-box-geometry name="box" :width="400" :height="1" :depth="800"></vgl-box-geometry>
 
+          <!-- 壁(縦) -->
+          <vgl-box-geometry name="wall_vertical" :width="1" :height="10" :depth="340"></vgl-box-geometry>
+          <!-- 壁(横) -->
+          <vgl-box-geometry name="wall_horizon" :width="340" :height="10" :depth="1"></vgl-box-geometry>
+
           <!-- ライン -->
           <vgl-box-geometry name="long_line"  :width="1" :height="1" :depth="800"></vgl-box-geometry>
           <vgl-box-geometry name="short_line" :width="400" :height="1" :depth="1"></vgl-box-geometry>
@@ -20,6 +25,7 @@
           <vgl-mesh-standard-material name="ob" color="#ffff00"></vgl-mesh-standard-material>
           <vgl-mesh-standard-material name="cb" color="#ffffff"></vgl-mesh-standard-material>
           <vgl-mesh-lambert-material name="green" color="#009900"></vgl-mesh-lambert-material>
+          <vgl-mesh-lambert-material name="green2" color="#005500"></vgl-mesh-lambert-material>
           <vgl-mesh-lambert-material name="gray" color="#000000"></vgl-mesh-lambert-material>
           <vgl-mesh-lambert-material name="ltgray" color="#ffffff"></vgl-mesh-lambert-material>
           <vgl-line-basic-material
@@ -61,18 +67,19 @@
             <!-- トレイン表示 -->
             <vgl-group v-if="trainBalls">
               <vgl-group>
-                <vgl-mesh  v-for="(ball,i) in trainBallsOb2Pk"
-                  v-bind:key="i"
-                  geometry="sphere"
-                  material="ob"
-                  :position="ball"
-                  cast-shadow receive-shadow></vgl-mesh>
-              </vgl-group>
-              <vgl-group>
                 <vgl-mesh  v-for="(ball,ii) in trainBallsCb2Gb"
                   v-bind:key="ii"
                   geometry="sphere"
                   material="cb"
+                  :position="ball"
+                  cast-shadow receive-shadow></vgl-mesh>
+              </vgl-group>
+
+              <vgl-group>
+                <vgl-mesh  v-for="(ball,i) in trainBallsOb2Pk"
+                  v-bind:key="i"
+                  geometry="sphere"
+                  material="ob"
                   :position="ball"
                   cast-shadow receive-shadow></vgl-mesh>
               </vgl-group>
@@ -99,6 +106,15 @@
 
           <!-- ビリヤード台 -->
           <vgl-mesh geometry="box" material="green" :position="`0 0 0`" receive-shadow ></vgl-mesh>
+
+          <!-- 壁(縦) -->
+          <vgl-mesh geometry="wall_vertical" material="green2" :position="`200 0 200`" receive-shadow ></vgl-mesh>
+          <vgl-mesh geometry="wall_vertical" material="green2" :position="`200 0 -200`" receive-shadow ></vgl-mesh>
+          <vgl-mesh geometry="wall_vertical" material="green2" :position="`-200 0 200`" receive-shadow ></vgl-mesh>
+          <vgl-mesh geometry="wall_vertical" material="green2" :position="`-200 0 -200`" receive-shadow ></vgl-mesh>
+
+          <vgl-mesh geometry="wall_horizon" material="green2" :position="`0 0 -400`" receive-shadow ></vgl-mesh>
+          <vgl-mesh geometry="wall_horizon" material="green2" :position="`0 0  400`" receive-shadow ></vgl-mesh>
 
           <vgl-mesh geometry="box2" material="ob" :position="gb3d" :translate="`  `" :rotation="`0 0.5 0`" />
 
@@ -235,7 +251,7 @@ export default {
 
       // 的球を中心に、指定角度の方向へ、距離を伸ばしながらボールを配置する
       let targets = []
-      for (let i = 0; i < balls; i++) {
+      for (let i = -5; i < balls; i++) {
         const r = i * vm.r * 2
         targets.push({
           cx: vm.ob.cx + r * Math.cos(deg),

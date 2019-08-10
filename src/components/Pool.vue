@@ -49,7 +49,7 @@
               <g>
                 <circle v-for="(pocket,index) in pockets"
                   ref="pocket" v-bind:key="index" :cx="pocket.x" :cy="pocket.y"
-                  :r="r * 5" fill="rgba(0,0,255,0.3)"/></g>
+                  :r="(block - r) / 2" fill="rgba(0,0,255,0.2)"/></g>
 
             </g>
 
