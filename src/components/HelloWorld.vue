@@ -162,6 +162,10 @@ import ThickBall from './ThickBall'
 import GlPanel from './GlPanel'
 import isMobile from 'ismobilejs'
 
+function handleTouchMove (event) {
+  event.preventDefault()
+}
+
 export default {
   name: 'HelloWorld',
   components: {
@@ -204,6 +208,18 @@ export default {
       phi: '' + (Math.PI / 180 * 80),
       trainBalls: false,
       betweenLine: true
+    }
+  },
+  mounted () {
+    if (this.isSmartPhone) {
+      // スクロール禁止
+      document.addEventListener('touchmove', handleTouchMove, {passive: false})
+    }
+  },
+  unmounted () {
+    if (this.isSmartPhone) {
+      // スクロール復帰
+      document.removeEventListener('touchmove', handleTouchMove, {passive: false})
     }
   },
   methods: {
