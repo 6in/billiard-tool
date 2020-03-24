@@ -213,13 +213,13 @@ export default {
   mounted () {
     if (this.isSmartPhone) {
       // スクロール禁止
-      document.addEventListener('touchmove', handleTouchMove, {passive: false})
+      document.addEventListener('touchmove.noScroll', handleTouchMove, {passive: false})
     }
   },
   unmounted () {
     if (this.isSmartPhone) {
       // スクロール復帰
-      document.removeEventListener('touchmove', handleTouchMove, {passive: false})
+      document.removeEventListener('touchmove.noScroll', handleTouchMove, {passive: false})
     }
   },
   methods: {
