@@ -217,21 +217,23 @@ export default {
     }
   },
   mounted () {
-    this.scrollLock = isMobile.phone | isMobile.tablet
-    this.$forceUpdate()
+    this.scroll(this.scrollLock)
   },
   watch: {
     scrollLock (value) {
-      if (value) {
+      this.scroll(value)
+    }
+  },
+  methods: {
+    scroll (enable) {
+      if (enable) {
         // スクロール禁止
         document.addEventListener('touchmove', handleTouchMove, {passive: false})
       } else {
         // スクロール復帰
         document.removeEventListener('touchmove', handleTouchMove, {passive: false})
       }
-    }
-  },
-  methods: {
+    },
     onMoveBall ({ target, cx, cy }) {
       // console.log({target,cx,cy});
       const vm = this
