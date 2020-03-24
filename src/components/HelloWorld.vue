@@ -218,6 +218,7 @@ export default {
   },
   mounted () {
     this.scrollLock = isMobile.phone | isMobile.tablet
+    this.$forceUpdate()
   },
   watch: {
     scrollLock (value) {
