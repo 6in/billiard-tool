@@ -197,7 +197,7 @@ export default {
         cx: 200,
         cy: 500
       },
-      isSmartPhone: isMobile.phone ,
+      isSmartPhone: isMobile.phone,
       r: '8.0',
       gb2cbDegree: 0,
       thick: 0,
