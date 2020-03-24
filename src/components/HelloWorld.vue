@@ -213,8 +213,11 @@ export default {
       phi: '' + (Math.PI / 180 * 80),
       trainBalls: false,
       betweenLine: true,
-      scrollLock: isMobile.phone | isMobile.tablet
+      scrollLock: false,
     }
+  },
+  mounted () {
+    this.scrollLock = isMobile.phone | isMobile.tablet
   },
   watch: {
     scrollLock (value) {
