@@ -197,7 +197,7 @@ export default {
         cx: 200,
         cy: 500
       },
-      isSmartPhone: isMobile.phone | isMobile.tablet,
+      isSmartPhone: isMobile.phone ,
       r: '8.0',
       gb2cbDegree: 0,
       thick: 0,
@@ -211,13 +211,13 @@ export default {
     }
   },
   mounted () {
-    if (this.isSmartPhone) {
+    if (isMobile.tablet) {
       // スクロール禁止
       window.addEventListener('touchmove.noScroll', handleTouchMove, {passive: false})
     }
   },
   unmounted () {
-    if (this.isSmartPhone) {
+    if (isMobile.tablet) {
       // スクロール復帰
       window.removeEventListener('touchmove.noScroll', handleTouchMove, {passive: false})
     }
