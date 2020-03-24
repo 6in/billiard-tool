@@ -213,13 +213,13 @@ export default {
   mounted () {
     if (isMobile.tablet) {
       // スクロール禁止
-      window.addEventListener('touchmove', handleTouchMove, {passive: false})
+      document.addEventListener('touchmove', handleTouchMove, {passive: false})
     }
   },
   unmounted () {
     if (isMobile.tablet) {
       // スクロール復帰
-      window.removeEventListener('touchmove', handleTouchMove, {passive: false})
+      document.removeEventListener('touchmove', handleTouchMove, {passive: false})
     }
   },
   methods: {
