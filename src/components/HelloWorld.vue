@@ -37,6 +37,11 @@
               v-model="betweenLine"
               :width="100"/>
           </flex-item>
+          <flex-item>
+            <toggle-button :labels="{ checked: 'Scroll Lock', unchecked: 'Scroll Unlock'}"
+              v-model="scrollLock"
+              :width="100"/>
+          </flex-item>
         </flex-box>
       </flex-item>
       <flex-item>
@@ -207,19 +212,19 @@ export default {
       showGB: true,
       phi: '' + (Math.PI / 180 * 80),
       trainBalls: false,
-      betweenLine: true
+      betweenLine: true,
+      scrollLock: false
     }
   },
-  mounted () {
-    if (isMobile.tablet) {
-      // スクロール禁止
-      document.addEventListener('touchmove', handleTouchMove, {passive: false})
-    }
-  },
-  unmounted () {
-    if (isMobile.tablet) {
-      // スクロール復帰
-      document.removeEventListener('touchmove', handleTouchMove, {passive: false})
+  watch: {
+    scrollLock (value) {
+      if (value) {
+        // スクロール禁止
+        document.addEventListener('touchmove', handleTouchMove, {passive: false})
+      } else {
+        // スクロール復帰
+        document.removeEventListener('touchmove', handleTouchMove, {passive: false})
+      }
     }
   },
   methods: {
