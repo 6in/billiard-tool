@@ -213,7 +213,7 @@ export default {
       phi: '' + (Math.PI / 180 * 80),
       trainBalls: false,
       betweenLine: true,
-      scrollLock: false
+      scrollLock: isMobile.phone | isMobile.tablet
     }
   },
   mounted () {
